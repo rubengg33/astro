@@ -10,12 +10,21 @@ export async function getStaticPaths() {
   })
 }
 
+// export function getStaticPaths() {
+//   return [
+//     {params: {slug: 'Team'}},
+//   ];
+// }
+
 const { slug } = Astro.params;
 const posts = await getPosts()
 
 const article = posts.find(item => item.slug === slug)
 ---
 
-<Layout>  
-  <Article {...article}/>
-</Layout>
+<html>
+  <Layout>
+    <Article {...article}/>
+  </Layout>
+  <h1>hooña</h1>
+</html>
