@@ -1,33 +1,38 @@
-// Función para generar un slug basado en el título.
-const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9 ]/g, '') // Elimina caracteres no deseados.
-      .replace(/\s+/g, '-')       // Reemplaza espacios por guiones.
-      .trim();                    // Elimina espacios al inicio y al final.
-  };
-  
-  // Crear los posts de manera dinámica usando el índice y asignando valores predefinidos para la imagen.
-  export const posts = [...Array(6)].map((_, index) => {
-    return {
-      id: index + 1,  // ID comenzando desde 1
-      title: `Post Title ${index + 1}`,  // Título simple para cada post
-      description: `Description for post ${index + 1}`,  // Descripción simple
-      body: `This is the body content for post ${index + 1}.`,  // Cuerpo de contenido simple
-      image: `https://picsum.photos/id/${index * 10}/600/400`,  // URL de la imagen
-      slug: `post-${index + 1}`,  // Slug basado en el índice
-    };
-  });
-  
-  // Función para obtener posts (simula una carga desde una API).
-  const articles: any[] = [];
-  export const getPosts = async () => {
-    if (articles.length) return articles;
-    const items: any[] = await fetch('https://astro-c7c74-default-rtdb.europe-west1.firebasedatabase.app/posts.json').then(res => res.json())
+// articles.ts
 
-    // Aquí puedes implementar la lógica real de API para cargar posts.
-    // Simulamos la carga desde la API añadiendo el array posts.
-    articles.push(...posts);
-    return articles;
-  };
-  
+// Interfaz para definir la estructura de un Post
+export interface Post {
+  id: number;
+  title: string;
+  description: string;
+  body: string;
+  image: string;
+  slug: string;
+}
+
+// URL de la API (ajusta esta URL a la de tu API real)
+const API_URL = 'https://astro-c7c74-default-rtdb.europe-west1.firebasedatabase.app/posts.json';
+
+// Función para obtener todos los posts desde la API
+export const getPosts = async (): Promise<Post[]> => {
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error(`Error al obtener los posts: ${response.statusText}`);
+    }
+    const data = await response.json();
+
+    // Transformar los datos si es necesario
+    return data.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      body: item.body,
+      image: item.image,
+      slug: item.slug,
+    }));
+  } catch (error) {
+    console.error('Error en getPosts:', error);
+    return [];
+  }
+};

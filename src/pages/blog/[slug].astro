@@ -16,6 +16,6 @@ const posts = await getPosts()
 const article = posts.find(item => item.slug === slug)
 ---
 
-<Layout>
+<Layout>  
   <Article {...article}/>
 </Layout>
