@@ -6,7 +6,7 @@ import { getPosts } from '../../lib/articles';
 export async function getStaticPaths() {
   const posts = await getPosts()
   return posts.map(item => {
-    return { params: item }
+    return { params: { slug: item.slug } } // Solo 'slug' aquí, no el objeto completo
   })
 }
 
