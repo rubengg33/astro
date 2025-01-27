@@ -1,13 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getPosts } from "../../lib/articles";
+import PostList from "../../components/PostList.astro";
 
 // Función getStaticPaths para generar rutas estáticas
 export async function getStaticPaths() {
-  // Obtener todos los posts solo para generar los géneros
+  // Obtener todos los posts de forma asincrónica
   const posts = await getPosts();
 
-  // Obtener los géneros disponibles para generar las rutas dinámicas
+  // Obtener todos los géneros disponibles
   const genres = [...new Set(posts.flatMap(post => post.genres))];
 
   return genres.map(genre => ({
@@ -24,37 +25,10 @@ const genre = Astro.params.genre;
 // Filtrar los posts si se especifica un género
 const filteredPosts = genre
   ? posts.filter(post => post.genres.some(g => g.toLowerCase() === genre.toLowerCase()))
-  : posts; // Si no hay género, mostrar todos los posts
+  : posts;
+
 ---
 
 <Layout>
-  <div class="container my-12 mx-auto px-4 md:px-12">
-    {filteredPosts.length > 0 ? (
-      <div class="flex flex-wrap -mx-1 lg:-mx-4">
-        {filteredPosts.map((item) => (
-          <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 border-transparent hover:border-white border-2 rounded-3xl">
-            <article class="overflow-hidden rounded-lg shadow-lg">
-              <a href={`/blog/${item.slug}`}>
-                <img
-                  alt={item.title}
-                  class="block h-auto w-full object-cover"
-                  src={item.image}
-                />
-              </a>
-
-              <header class="flex items-center justify-between leading-tight p-2 md:p-4">
-                <h1 class="text-lg">
-                  <a class="no-underline hover:underline text-white font-bold" href={`/blog/${item.slug}`}>
-                    {item.title}
-                  </a>
-                </h1>
-              </header>
-            </article>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <p class="text-white">No se encontraron posts para el género "{genre}".</p>
-    )}
-  </div>
+  <PostList posts={filteredPosts} />
 </Layout>

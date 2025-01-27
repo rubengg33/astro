@@ -1,6 +1,7 @@
 ---
 // props
 const props = Astro.props
+import Like from "./Like.jsx";
 ---
 
 <div class="mx-auto max-w-4xl py-12 px-6 lg:px-8 font-bold">
@@ -19,6 +20,7 @@ const props = Astro.props
       {props.description}
     </p>
     <p class="text-white font-bold ml-10">{props.body}</p>
+    <Like postId={props.id} initialLikes={props.likes} onLikeUpdate={(likes: number) => props.likes = likes} client:load/> 
   </div>
   </article>
 </div>

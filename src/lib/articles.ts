@@ -9,6 +9,7 @@ export interface Post {
   image: string;
   slug: string;
   genres: string[];
+  likes: number;
 }
 
 // URL de la API (ajusta esta URL a la de tu API real)
@@ -32,6 +33,7 @@ export const getPosts = async (): Promise<Post[]> => {
       image: item.image,
       slug: item.slug,
       genres: item.genres || [], // Asignar un array vacío si no hay géneros
+      likes: item.likes || 0,
     }));
   } catch (error) {
     console.error('Error en getPosts:', error);
